@@ -17,27 +17,38 @@ const StatisticLine = ({ text, value }) => {
   );
 };
 
+const StatisticsTable = ({ good, neutral, bad, all, average, positive }) => (
+  <table>
+    <tbody>
+      <StatisticLine text="Good" value={good} />
+      <StatisticLine text="Neutral" value={neutral} />
+      <StatisticLine text="Bad" value={bad} />
+      <StatisticLine text="All" value={all} />
+      <StatisticLine text="Average" value={average} />
+      <StatisticLine text="Positive" value={`${positive} %`} />
+    </tbody>
+  </table>
+);
+
 const Statistics = ({ good, neutral, bad }) => {
   const all = good + neutral + bad;
   const average = all > 0 ? (good - bad) / all : 0;
   const positive = all > 0 ? (good / all) * 100 : 0;
 
-  const statistics = (
-    <table>
-      <tbody>
-        <StatisticLine text="Good" value={good} />
-        <StatisticLine text="Neutral" value={neutral} />
-        <StatisticLine text="Bad" value={bad} />
-        <StatisticLine text="All" value={all} />
-        <StatisticLine text="Average" value={average} />
-        <StatisticLine text="Positive" value={`${positive} %`} />
-      </tbody>
-    </table>
-  );
-
   if (all === 0) {
     return <p>No feedback given</p>;
-  } else return statistics;
+  }
+
+  return (
+    <StatisticsTable
+      good={good}
+      neutral={neutral}
+      bad={bad}
+      all={all}
+      average={average}
+      positive={positive}
+    />
+  );
 };
 
 const App = () => {
