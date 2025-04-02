@@ -1,11 +1,11 @@
-const Header = (props) => {
-  return <h2>{props.course.name}</h2>;
+const Header = ({ course }) => {
+  return <h2>{course.name}</h2>;
 };
 
-const Part = (props) => {
+const Part = ({ part, exercises }) => {
   return (
     <p>
-      {props.part} {props.exercises}
+      {part} {exercises}
     </p>
   );
 };
