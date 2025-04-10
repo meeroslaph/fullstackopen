@@ -34,7 +34,7 @@ const App = () => {
     }
     const personObject = {
       name: newName,
-      phone: newNumber,
+      number: newNumber,
       id: persons.length + 1,
     };
     setPersons(persons.concat(personObject));
@@ -50,7 +50,7 @@ const App = () => {
     setNewName(event.target.value);
   };
 
-  const handlePhoneChange = (event) => {
+  const handleNumberChange = (event) => {
     setNewNumber(event.target.value);
   };
 
@@ -64,7 +64,7 @@ const App = () => {
         newName={newName}
         handleNameChange={handleNameChange}
         newNumber={newNumber}
-        handlePhoneChange={handlePhoneChange}
+        handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
       <Persons personsToShow={personsToShow} />
