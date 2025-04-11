@@ -5,10 +5,7 @@ const Persons = ({ personsToShow, handleDelete }) => {
     <>
       {personsToShow.map((person) => (
         <div key={person.id}>
-          <Person person={person} />
-          <button onClick={() => handleDelete(person.id, person.name)}>
-            Delete
-          </button>
+          <Person person={person} handleDelete={handleDelete} />
         </div>
       ))}
     </>
