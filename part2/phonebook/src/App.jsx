@@ -30,14 +30,35 @@ const App = () => {
         (person) => person.name.toLowerCase() === newName.toLowerCase()
       )
     ) {
-      alert(`${newName} is already added to the phonebook`);
+      if (
+        confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const personToUpdate = persons.find(
+          (person) => person.name.toLowerCase() === newName.toLowerCase()
+        );
+        const updatedPerson = { ...personToUpdate, number: newNumber };
+        personsService
+          .update(personToUpdate.id, updatedPerson)
+          .then((response) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== personToUpdate.id ? person : response.data
+              )
+            );
+            setNewName("");
+            setNewNumber("");
+          });
+      }
+      setNewName("");
+      setNewNumber("");
       return;
     }
 
     const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
     };
 
     personsService.create(personObject).then((response) => {
