@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification.jsx";
 import personsService from "./services/persons.js";
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     personsService.getAll().then((response) => {
@@ -49,10 +51,12 @@ const App = () => {
             );
             setNewName("");
             setNewNumber("");
+            setSuccessMessage(`Updated number for ${personToUpdate.name}`);
+            setTimeout(() => {
+              setSuccessMessage(null);
+            }, 3000);
           });
       }
-      setNewName("");
-      setNewNumber("");
       return;
     }
 
@@ -66,6 +70,11 @@ const App = () => {
       setNewName("");
       setNewNumber("");
     });
+
+    setSuccessMessage(`Added '${personObject.name}'`);
+    setTimeout(() => {
+      setSuccessMessage(null);
+    }, 3000);
   };
 
   const handleDelete = (id, name) => {
@@ -91,6 +100,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h3>Add new contact</h3>
       <PersonForm
