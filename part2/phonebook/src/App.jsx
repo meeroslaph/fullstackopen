@@ -11,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     personsService.getAll().then((response) => {
@@ -55,6 +56,17 @@ const App = () => {
             setTimeout(() => {
               setSuccessMessage(null);
             }, 3000);
+          })
+          .catch((error) => {
+            setErrorMessage(
+              `${personToUpdate.name} has already been removed from the server`
+            );
+            setPersons(
+              persons.filter((person) => person.id !== personToUpdate.id)
+            );
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 3000);
           });
       }
       return;
@@ -65,23 +77,42 @@ const App = () => {
       number: newNumber,
     };
 
-    personsService.create(personObject).then((response) => {
-      setPersons(persons.concat(response.data));
-      setNewName("");
-      setNewNumber("");
-    });
-
-    setSuccessMessage(`Added '${personObject.name}'`);
-    setTimeout(() => {
-      setSuccessMessage(null);
-    }, 3000);
+    personsService
+      .create(personObject)
+      .then((response) => {
+        setPersons(persons.concat(response.data));
+        setNewName("");
+        setNewNumber("");
+        setSuccessMessage(`Added '${personObject.name}'`);
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 3000);
+      })
+      .catch((error) => {
+        setErrorMessage(`Failed to add '${personObject.name}'`);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 3000);
+      });
   };
 
   const handleDelete = (id, name) => {
     if (window.confirm(`Delete ${name}?`)) {
-      personsService.deleteEntry(id).then(() => {
-        setPersons(persons.filter((person) => person.id !== id));
-      });
+      personsService
+        .deleteEntry(id)
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id));
+          setSuccessMessage(`Deleted '${name}'`);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 3000);
+        })
+        .catch((error) => {
+          setErrorMessage(`Failed to delete '${name}'`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 3000);
+        });
     }
   };
 
@@ -100,7 +131,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMessage} />
+      {successMessage && (
+        <Notification message={successMessage} type="success" />
+      )}
+      {errorMessage && <Notification message={errorMessage} type="error" />}
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h3>Add new contact</h3>
       <PersonForm
