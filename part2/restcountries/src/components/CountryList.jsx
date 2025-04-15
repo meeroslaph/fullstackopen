@@ -1,4 +1,9 @@
+import { useState } from "react";
+import CountryDetails from "./CountryDetails";
+
 const CountryList = ({ countries }) => {
+  const [selectedCountry, setSelectedCountry] = useState(null);
+
   if (countries.length === 0 && !countries.searched) {
     return null;
   }
@@ -11,37 +16,23 @@ const CountryList = ({ countries }) => {
     return <p>Too many matches, specify another filter.</p>;
   }
 
-  if (countries.length > 1) {
-    return (
-      <ul>
-        {countries.map((country) => (
-          <li key={country.cca3}>{country.name.common}</li>
-        ))}
-      </ul>
-    );
+  if (countries.length === 1) {
+    return <CountryDetails country={countries[0]} />;
   }
 
-  if (countries.length === 1) {
-    const country = countries[0];
-    return (
-      <div>
-        <h2>{country.name.common}</h2>
-        <p>Capital: {country.capital}</p>
-        <p>Area: {country.area} km²</p>
-        <h3>Languages:</h3>
-        <ul>
-          {Object.values(country.languages).map((language) => (
-            <li key={language}>{language}</li>
-          ))}
-        </ul>
-        <img
-          src={country.flags.svg}
-          alt={`Flag of ${country.name.common}`}
-          width="150"
-        />
-      </div>
-    );
-  }
+  return (
+    <div>
+      <ul>
+        {countries.map((country) => (
+          <li key={country.cca3}>
+            {country.name.common}{" "}
+            <button onClick={() => setSelectedCountry(country)}>Show</button>
+          </li>
+        ))}
+      </ul>
+      {selectedCountry && <CountryDetails country={selectedCountry} />}
+    </div>
+  );
 };
 
 export default CountryList;
