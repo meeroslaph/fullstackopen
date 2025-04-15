@@ -16,11 +16,18 @@ const App = () => {
   const handleInputChange = (event) => {
     const searchQuery = event.target.value.toLowerCase();
     setQuery(searchQuery);
-    setFilteredCountries(
-      countries.filter((country) =>
+
+    if (searchQuery) {
+      const filtered = countries.filter((country) =>
         country.name.common.toLowerCase().includes(searchQuery)
-      )
-    );
+      );
+      filtered.searched = true;
+      setFilteredCountries(filtered);
+    } else {
+      const emptyResult = [];
+      emptyResult.searched = false;
+      setFilteredCountries(emptyResult);
+    }
   };
 
   return (

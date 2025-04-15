@@ -1,6 +1,10 @@
 const CountryList = ({ countries }) => {
-  if (countries.length === 0) {
+  if (countries.length === 0 && !countries.searched) {
     return null;
+  }
+
+  if (countries.length === 0 && countries.searched) {
+    return <p>No matches found.</p>;
   }
 
   if (countries.length > 10) {
@@ -38,8 +42,6 @@ const CountryList = ({ countries }) => {
       </div>
     );
   }
-
-  return <p>No matches found.</p>;
 };
 
 export default CountryList;
